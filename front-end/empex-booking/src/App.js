@@ -1,7 +1,8 @@
-// src/App.js
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import BookingForm from './components/BookingForm';
 import AvailableSlotsCalendar from './components/Calendar';
+import AdminDashboard from './components/AdminDashboard';
 import './App.css';
 
 const App = () => {
@@ -12,10 +13,22 @@ const App = () => {
   };
 
   return (
-    <div className="App">
-      <AvailableSlotsCalendar onDateSelect={handleDateSelect} />
-      <BookingForm selectedDate={selectedDate} />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <AvailableSlotsCalendar onDateSelect={handleDateSelect} />
+                <BookingForm selectedDate={selectedDate} />
+              </>
+            }
+          />
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 

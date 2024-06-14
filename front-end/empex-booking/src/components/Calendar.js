@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Calendar from 'react-calendar';
 import axios from 'axios';
+import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Container, Row, Col } from 'react-bootstrap';
 
@@ -21,14 +21,12 @@ const AvailableSlotsCalendar = ({ onDateSelect }) => {
   }, []);
 
   const tileDisabled = ({ date, view }) => {
-    // Disable Sundays
     return view === 'month' && date.getDay() === 0;
   };
 
   const handleDateChange = (selectedDate) => {
-    const localDate = new Date(selectedDate.getTime() - (selectedDate.getTimezoneOffset() * 60000));
-    setDate(localDate);
-    onDateSelect(localDate);
+    setDate(selectedDate);
+    onDateSelect(selectedDate);
   };
 
   return (
