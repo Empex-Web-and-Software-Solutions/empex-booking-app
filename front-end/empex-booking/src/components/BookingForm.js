@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 
 const BookingForm = ({ selectedDate }) => {
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     name: '',
     email: '',
     phone: '',
@@ -11,8 +11,9 @@ const BookingForm = ({ selectedDate }) => {
     date: selectedDate ? selectedDate.toISOString().substring(0, 10) : '',
     time: '',
     details: ''
-  });
+  };
 
+  const [formData, setFormData] = useState(initialFormData);
   const [timeSlots, setTimeSlots] = useState([]);
 
   useEffect(() => {
@@ -51,6 +52,9 @@ const BookingForm = ({ selectedDate }) => {
       console.log('Booking form data:', formData); // Log form data for debugging
       const response = await axios.post('http://localhost:5000/api/book', formData);
       alert(response.data.message);
+
+      // Clear form data
+      setFormData(initialFormData);
     } catch (error) {
       console.error('Error booking appointment:', error.response ? error.response.data : error.message); // Log error for debugging
       alert('Error booking appointment');
@@ -69,6 +73,7 @@ const BookingForm = ({ selectedDate }) => {
                 type="text"
                 name="name"
                 placeholder="Enter your name"
+                value={formData.name}
                 onChange={handleChange}
                 required
               />
@@ -80,6 +85,7 @@ const BookingForm = ({ selectedDate }) => {
                 type="email"
                 name="email"
                 placeholder="Enter your email"
+                value={formData.email}
                 onChange={handleChange}
                 required
               />
@@ -91,6 +97,7 @@ const BookingForm = ({ selectedDate }) => {
                 type="tel"
                 name="phone"
                 placeholder="Enter your phone number"
+                value={formData.phone}
                 onChange={handleChange}
                 required
               />
@@ -101,6 +108,7 @@ const BookingForm = ({ selectedDate }) => {
               <Form.Control
                 as="select"
                 name="consultationType"
+                value={formData.consultationType}
                 onChange={handleChange}
                 required
               >
@@ -129,12 +137,13 @@ const BookingForm = ({ selectedDate }) => {
               <Form.Control
                 as="select"
                 name="time"
+                value={formData.time}
                 onChange={handleChange}
                 required
               >
                 <option value="">Select Time</option>
                 {timeSlots.map((time, index) => (
-                  <option key={index} value={new Date(time).toTimeString().substring(0, 5)}>
+                  <option key={index} value={new Date(time).toTimeString().substring(0, 5)} disabled={time.isBooked}>
                     {new Date(time).toLocaleTimeString([], {
                       hour: '2-digit',
                       minute: '2-digit'
@@ -150,6 +159,7 @@ const BookingForm = ({ selectedDate }) => {
                 as="textarea"
                 name="details"
                 placeholder="Details (if any)"
+                value={formData.details}
                 onChange={handleChange}
               />
             </Form.Group>
