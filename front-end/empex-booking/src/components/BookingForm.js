@@ -28,11 +28,12 @@ const BookingForm = ({ selectedDate }) => {
     };
 
     if (selectedDate) {
+      const utcDate = new Date(Date.UTC(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate()));
       setFormData(prevFormData => ({
         ...prevFormData,
-        date: selectedDate.toISOString().substring(0, 10)
+        date: utcDate.toISOString().substring(0, 10)
       }));
-      fetchTimeSlots(selectedDate);
+      fetchTimeSlots(utcDate);
     }
   }, [selectedDate]);
 
