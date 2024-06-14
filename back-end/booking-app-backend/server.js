@@ -127,18 +127,21 @@ app.post('/api/book', async (req, res) => {
     if (isNaN(startDateTime.getTime())) {
       throw new Error(`Invalid start date and time: ${date}T${time}`);
     }
-    const endDateTime = new Date(startDateTime.getTime() + 30 * 60 * 1000); // Add 30 minutes
+
+    // Adjust for local time zone if necessary
+    const localStartDateTime = new Date(startDateTime.getTime() + startDateTime.getTimezoneOffset() * 60000);
+    const endDateTime = new Date(localStartDateTime.getTime() + 60 * 60 * 1000); 
 
     const event = {
       summary: `${name} - ${consultationType}`,
       description: `Email: ${email}\nPhone: ${phone}\nConsultation Type: ${consultationType}\nDetails: ${details}`,
       start: {
-        dateTime: startDateTime.toISOString(),
-        timeZone: 'UTC',
+        dateTime: localStartDateTime.toISOString(),
+        timeZone: 'UTC', 
       },
       end: {
         dateTime: endDateTime.toISOString(),
-        timeZone: 'UTC',
+        timeZone: 'UTC', 
       },
       attendees: [{ email }],
     };
