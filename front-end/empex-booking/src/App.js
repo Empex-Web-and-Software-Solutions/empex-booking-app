@@ -1,13 +1,22 @@
-import React from 'react';
+// src/App.js
+import React, { useState } from 'react';
 import BookingForm from './components/BookingForm';
+import AvailableSlotsCalendar from './components/Calendar';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+  };
+
   return (
     <div className="App">
-      <BookingForm />
+      <AvailableSlotsCalendar onDateSelect={handleDateSelect} />
+      <BookingForm selectedDate={selectedDate} />
     </div>
   );
-}
+};
 
 export default App;
