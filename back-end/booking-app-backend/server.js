@@ -94,10 +94,10 @@ app.get('/api/available-time-slots', async (req, res) => {
 
     const events = response.data.items;
     console.log('Events:', events); // Log events for debugging
-    const occupiedSlots = events.map(event => {
+    const occupiedSlots = events.flatMap(event => {
       const startTime = new Date(event.start.dateTime || event.start.date);
-      console.log('Start Time:', startTime); // Log each start time
-      return startTime.toISOString();
+      const halfHourLater = new Date(startTime.getTime() + 30 * 60 * 1000);
+      return [startTime.toISOString(), halfHourLater.toISOString()];
     });
 
     const availableTimeSlots = generateTimeSlots(new Date(date)).map(slot => {
@@ -130,18 +130,18 @@ app.post('/api/book', async (req, res) => {
 
     // Adjust for local time zone if necessary
     const localStartDateTime = new Date(startDateTime.getTime() + startDateTime.getTimezoneOffset() * 60000);
-    const endDateTime = new Date(localStartDateTime.getTime() + 60 * 60 * 1000); 
+    const endDateTime = new Date(localStartDateTime.getTime() + 60 * 60 * 1000); // Add 1 hour
 
     const event = {
       summary: `${name} - ${consultationType}`,
       description: `Email: ${email}\nPhone: ${phone}\nConsultation Type: ${consultationType}\nDetails: ${details}`,
       start: {
         dateTime: localStartDateTime.toISOString(),
-        timeZone: 'UTC', 
+        timeZone: 'UTC', // Ensure the time zone is correctly set
       },
       end: {
         dateTime: endDateTime.toISOString(),
-        timeZone: 'UTC', 
+        timeZone: 'UTC', // Ensure the time zone is correctly set
       },
       attendees: [{ email }],
     };

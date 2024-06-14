@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import './BookingForm.css';
 
-
 const BookingForm = ({ selectedDate, onDateClear }) => {
   const initialFormData = {
     name: '',
