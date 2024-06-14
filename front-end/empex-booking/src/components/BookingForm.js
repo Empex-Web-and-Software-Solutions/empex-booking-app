@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import './BookingForm.css';
 
-const BookingForm = ({ selectedDate }) => {
+
+const BookingForm = ({ selectedDate, onDateClear }) => {
   const initialFormData = {
     name: '',
     email: '',
@@ -35,6 +37,8 @@ const BookingForm = ({ selectedDate }) => {
         date: utcDate.toISOString().substring(0, 10)
       }));
       fetchTimeSlots(utcDate);
+    } else {
+      setFormData(initialFormData);
     }
   }, [selectedDate]);
 
@@ -53,8 +57,9 @@ const BookingForm = ({ selectedDate }) => {
       const response = await axios.post('http://localhost:5000/api/book', formData);
       alert(response.data.message);
 
-      // Clear form data
+      // Clear form data and date selection
       setFormData(initialFormData);
+      onDateClear();
     } catch (error) {
       console.error('Error booking appointment:', error.response ? error.response.data : error.message); // Log error for debugging
       alert('Error booking appointment');
@@ -143,7 +148,7 @@ const BookingForm = ({ selectedDate }) => {
               >
                 <option value="">Select Time</option>
                 {timeSlots.map((slot, index) => (
-                  <option key={index} value={new Date(slot.time).toTimeString().substring(0, 5)} disabled={slot.isBooked}>
+                  <option key={index} value={new Date(slot.time).toTimeString().substring(0, 5)} className={slot.isBooked ? 'booked' : ''} disabled={slot.isBooked}>
                     {new Date(slot.time).toLocaleTimeString([], {
                       hour: '2-digit',
                       minute: '2-digit'

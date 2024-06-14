@@ -4,8 +4,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Container, Row, Col } from 'react-bootstrap';
 
-const AvailableSlotsCalendar = ({ onDateSelect }) => {
-  const [date, setDate] = useState(new Date());
+const AvailableSlotsCalendar = ({ onDateSelect, selectedDate }) => {
   const [availableSlots, setAvailableSlots] = useState([]);
 
   useEffect(() => {
@@ -24,13 +23,9 @@ const AvailableSlotsCalendar = ({ onDateSelect }) => {
     if (view === 'month') {
       const now = new Date();
       now.setHours(0, 0, 0, 0);
-      return date < now || date.getDay() === 0; // Disable past dates and Sundays
+      const dateString = date.toISOString().substring(0, 10);
+      return date < now || date.getDay() === 0 || availableSlots.some(slot => slot.start.date === dateString);
     }
-  };
-
-  const handleDateChange = (selectedDate) => {
-    setDate(selectedDate);
-    onDateSelect(selectedDate);
   };
 
   return (
@@ -39,8 +34,8 @@ const AvailableSlotsCalendar = ({ onDateSelect }) => {
         <Col md="6">
           <h2 className="mt-4">Available Slots</h2>
           <Calendar
-            onChange={handleDateChange}
-            value={date}
+            onChange={onDateSelect}
+            value={selectedDate}
             tileDisabled={tileDisabled}
           />
         </Col>

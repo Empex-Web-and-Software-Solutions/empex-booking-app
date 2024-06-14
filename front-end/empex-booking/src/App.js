@@ -12,6 +12,10 @@ const App = () => {
     setSelectedDate(date);
   };
 
+  const handleDateClear = () => {
+    setSelectedDate(null);
+  };
+
   return (
     <Router>
       <div className="App">
@@ -20,8 +24,8 @@ const App = () => {
             path="/"
             element={
               <>
-                <AvailableSlotsCalendar onDateSelect={handleDateSelect} />
-                <BookingForm selectedDate={selectedDate} />
+                <AvailableSlotsCalendar onDateSelect={handleDateSelect} selectedDate={selectedDate} />
+                <BookingForm selectedDate={selectedDate} onDateClear={handleDateClear} />
               </>
             }
           />
