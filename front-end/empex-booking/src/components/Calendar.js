@@ -21,7 +21,11 @@ const AvailableSlotsCalendar = ({ onDateSelect }) => {
   }, []);
 
   const tileDisabled = ({ date, view }) => {
-    return view === 'month' && date.getDay() === 0;
+    if (view === 'month') {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      return date < now || date.getDay() === 0; // Disable past dates and Sundays
+    }
   };
 
   const handleDateChange = (selectedDate) => {
