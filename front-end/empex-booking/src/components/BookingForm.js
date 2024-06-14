@@ -142,9 +142,9 @@ const BookingForm = ({ selectedDate }) => {
                 required
               >
                 <option value="">Select Time</option>
-                {timeSlots.map((time, index) => (
-                  <option key={index} value={new Date(time).toTimeString().substring(0, 5)} disabled={time.isBooked}>
-                    {new Date(time).toLocaleTimeString([], {
+                {timeSlots.map((slot, index) => (
+                  <option key={index} value={new Date(slot.time).toTimeString().substring(0, 5)} disabled={slot.isBooked}>
+                    {new Date(slot.time).toLocaleTimeString([], {
                       hour: '2-digit',
                       minute: '2-digit'
                     })}

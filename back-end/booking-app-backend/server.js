@@ -1,5 +1,3 @@
-console.log("Starting server...");
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const { google } = require('googleapis');
@@ -14,8 +12,6 @@ const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(cors());
 
-console.log("Middleware configured...");
-
 const calendar = google.calendar('v3');
 const OAuth2 = google.auth.OAuth2;
 const oauth2Client = new OAuth2(
@@ -24,8 +20,6 @@ const oauth2Client = new OAuth2(
   process.env.REDIRECT_URL
 );
 oauth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
-
-console.log("Google API client configured...");
 
 const isWithinBookingHours = (date) => {
   const day = date.getDay();
@@ -67,7 +61,7 @@ app.get('/api/available-slots', async (req, res) => {
     });
     const events = response.data.items;
     const availableSlots = events.filter(event => {
-      const eventDate = new Date(event.start.dateTime);
+      const eventDate = new Date(event.start.dateTime || event.start.date);
       return event.status !== 'confirmed' && isWithinBookingHours(eventDate);
     });
     res.status(200).json(availableSlots);
@@ -99,11 +93,19 @@ app.get('/api/available-time-slots', async (req, res) => {
     });
 
     const events = response.data.items;
-    const occupiedSlots = events.map(event => new Date(event.start.dateTime));
+    console.log('Events:', events); // Log events for debugging
+    const occupiedSlots = events.map(event => {
+      const startTime = new Date(event.start.dateTime || event.start.date);
+      console.log('Start Time:', startTime); // Log each start time
+      return startTime.toISOString();
+    });
 
-    const availableTimeSlots = generateTimeSlots(new Date(date)).filter(slot => {
-      const slotDate = new Date(slot);
-      return !occupiedSlots.some(occupied => occupied.getTime() === slotDate.getTime());
+    const availableTimeSlots = generateTimeSlots(new Date(date)).map(slot => {
+      console.log('Generated Slot:', slot); // Log each generated slot
+      return {
+        time: slot,
+        isBooked: occupiedSlots.includes(slot),
+      };
     });
 
     res.status(200).json(availableTimeSlots);
