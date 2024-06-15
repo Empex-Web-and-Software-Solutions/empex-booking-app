@@ -12,6 +12,8 @@ const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(cors());
 
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
 const calendar = google.calendar('v3');
 const OAuth2 = google.auth.OAuth2;
 const oauth2Client = new OAuth2(
@@ -48,6 +50,15 @@ const generateTimeSlots = (date) => {
   }
   return slots;
 };
+
+app.post('/api/admin/login', (req, res) => {
+    const { password } = req.body;
+    if (password === ADMIN_PASSWORD) {
+      return res.status(200).json({ message: 'Login successful' });
+    } else {
+      return res.status(401).json({ message: 'Invalid password' });
+    }
+  });
 
 app.get('/api/appointments', async (req, res) => {
     try {

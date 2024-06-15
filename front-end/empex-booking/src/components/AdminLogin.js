@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import './AdminLogin.css';
 
@@ -7,12 +8,15 @@ const AdminLogin = ({ setAuth }) => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (password === 'empex2024') { 
-      setAuth(true);
-      navigate('/admin');
-    } else {
+    try {
+      const response = await axios.post('http://localhost:5000/api/admin/login', { password });
+      if (response.status === 200) {
+        setAuth(true);
+        navigate('/admin');
+      }
+    } catch (error) {
       alert('Incorrect password');
     }
   };
