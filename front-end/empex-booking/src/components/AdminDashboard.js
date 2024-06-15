@@ -1,21 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, Container, Row, Col } from 'react-bootstrap';
+import { Table, Button, Container, Row, Col } from 'react-bootstrap';
+import './AdminDashboard.css';
 
 const AdminDashboard = () => {
-  const [bookings, setBookings] = useState([]);
+  const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetchAppointments = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/bookings');
-        setBookings(response.data);
+        const response = await axios.get('http://localhost:5000/api/appointments');
+        setAppointments(response.data);
       } catch (error) {
-        console.error('Error fetching bookings', error);
+        console.error('Error fetching appointments', error);
       }
     };
-    fetchBookings();
+
+    fetchAppointments();
   }, []);
+
+  const handleCancel = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/appointments/${id}`);
+      setAppointments(appointments.filter(appointment => appointment.id !== id));
+    } catch (error) {
+      console.error('Error cancelling appointment', error);
+    }
+  };
+
+  const handleEdit = (id) => {
+    // Implement edit functionality
+  };
 
   return (
     <Container>
@@ -28,22 +43,25 @@ const AdminDashboard = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>Consultation Type</th>
                 <th>Date</th>
                 <th>Time</th>
-                <th>Details</th>
+                <th>Consultation Type</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {bookings.map((booking, index) => (
-                <tr key={index}>
-                  <td>{booking.name}</td>
-                  <td>{booking.email}</td>
-                  <td>{booking.phone}</td>
-                  <td>{booking.consultationType}</td>
-                  <td>{new Date(booking.date).toLocaleDateString()}</td>
-                  <td>{new Date(booking.time).toLocaleTimeString()}</td>
-                  <td>{booking.details}</td>
+              {appointments.map(appointment => (
+                <tr key={appointment.id}>
+                  <td>{appointment.name}</td>
+                  <td>{appointment.email}</td>
+                  <td>{appointment.phone}</td>
+                  <td>{appointment.date}</td>
+                  <td>{appointment.time}</td>
+                  <td>{appointment.consultationType}</td>
+                  <td>
+                    <Button variant="warning" onClick={() => handleEdit(appointment.id)}>Edit</Button>
+                    <Button variant="danger" onClick={() => handleCancel(appointment.id)}>Cancel</Button>
+                  </td>
                 </tr>
               ))}
             </tbody>

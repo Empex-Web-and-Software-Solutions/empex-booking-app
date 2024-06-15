@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import BookingForm from './components/BookingForm';
 import AvailableSlotsCalendar from './components/Calendar';
 import AdminDashboard from './components/AdminDashboard';
+import AdminLogin from './components/AdminLogin';
 import './App.css';
 
 const App = () => {
   const [selectedDate, setSelectedDate] = useState(null);
+  const [isAuth, setIsAuth] = useState(false);
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -29,7 +31,7 @@ const App = () => {
               </>
             }
           />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin" element={isAuth ? <AdminDashboard /> : <AdminLogin setAuth={setIsAuth} />} />
         </Routes>
       </div>
     </Router>

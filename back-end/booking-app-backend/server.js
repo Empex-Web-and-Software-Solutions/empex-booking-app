@@ -49,6 +49,73 @@ const generateTimeSlots = (date) => {
   return slots;
 };
 
+app.get('/api/appointments', async (req, res) => {
+    try {
+      console.log('Fetching appointments...');
+      const response = await calendar.events.list({
+        auth: oauth2Client,
+        calendarId: 'primary',
+        timeMin: (new Date()).toISOString(),
+        singleEvents: true,
+        orderBy: 'startTime',
+      });
+  
+      console.log('Appointments fetched:', response.data.items);
+  
+      const appointments = response.data.items.map(event => {
+        console.log('Processing event:', event);
+  
+        const descriptionParts = event.description ? event.description.split('\n') : [];
+        const phone = descriptionParts.length > 1 ? descriptionParts[1].split(': ')[1] : '';
+  
+        // Handle cases where dateTime might be missing or invalid
+        let dateTime;
+        try {
+          dateTime = new Date(event.start.dateTime);
+          if (isNaN(dateTime.getTime())) throw new Error('Invalid date');
+        } catch (error) {
+          console.error(`Invalid dateTime for event ${event.id}:`, event.start);
+          dateTime = null;
+        }
+  
+        if (!dateTime) return null;
+  
+        return {
+          id: event.id,
+          name: event.summary.split(' - ')[0],
+          email: event.attendees && event.attendees.length > 0 ? event.attendees[0].email : '',
+          phone,
+          date: dateTime.toISOString().substring(0, 10),
+          time: dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          consultationType: event.summary.split(' - ')[1],
+        };
+      }).filter(Boolean); // Filter out any null values
+  
+      console.log('Formatted appointments:', appointments);
+      res.status(200).json(appointments);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+      res.status(500).json({ message: 'Error fetching appointments', error: error.message });
+    }
+  });
+  
+  app.delete('/api/appointments/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      console.log('Cancelling appointment with id:', id);
+      await calendar.events.delete({
+        auth: oauth2Client,
+        calendarId: 'primary',
+        eventId: id,
+      });
+      res.status(200).json({ message: 'Appointment cancelled successfully' });
+    } catch (error) {
+      console.error('Error cancelling appointment:', error);
+      res.status(500).json({ message: 'Error cancelling appointment', error: error.message });
+    }
+  });
+  
+
 app.get('/api/available-slots', async (req, res) => {
   try {
     const response = await calendar.events.list({
