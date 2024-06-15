@@ -3,6 +3,7 @@ import axios from 'axios';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Container, Row, Col } from 'react-bootstrap';
+// import './AvailableSlotsCalendar.css';
 
 const AvailableSlotsCalendar = ({ onDateSelect, selectedDate }) => {
   const [availableSlots, setAvailableSlots] = useState([]);

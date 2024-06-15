@@ -33,6 +33,9 @@ const App = () => {
           />
           <Route path="/admin" element={isAuth ? <AdminDashboard /> : <AdminLogin setAuth={setIsAuth} />} />
         </Routes>
+        <footer>
+        &copy; Empex Booking 2024. All rights reserved. Version 1.0
+        </footer>
       </div>
     </Router>
   );

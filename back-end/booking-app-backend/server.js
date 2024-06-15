@@ -197,18 +197,18 @@ app.post('/api/book', async (req, res) => {
 
     // Adjust for local time zone if necessary
     const localStartDateTime = new Date(startDateTime.getTime() + startDateTime.getTimezoneOffset() * 60000);
-    const endDateTime = new Date(localStartDateTime.getTime() + 60 * 60 * 1000); // Add 1 hour
+    const endDateTime = new Date(localStartDateTime.getTime() + 60 * 60 * 1000); 
 
     const event = {
       summary: `${name} - ${consultationType}`,
       description: `Email: ${email}\nPhone: ${phone}\nConsultation Type: ${consultationType}\nDetails: ${details}`,
       start: {
         dateTime: localStartDateTime.toISOString(),
-        timeZone: 'UTC', // Ensure the time zone is correctly set
+        timeZone: 'UTC', 
       },
       end: {
         dateTime: endDateTime.toISOString(),
-        timeZone: 'UTC', // Ensure the time zone is correctly set
+        timeZone: 'UTC', 
       },
       attendees: [{ email }],
     };

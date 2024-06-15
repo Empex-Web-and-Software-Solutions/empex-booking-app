@@ -5,7 +5,14 @@ body {
 }
 
 .App {
-  margin: 20px;
+  text-align: center;
+  background-color: #3e5de7;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 h2 {
@@ -14,7 +21,7 @@ h2 {
   margin-bottom: 20px;
 }
 
-.Form {
+/*.Form {
   background: #ffffff;
   padding: 20px;
   border-radius: 10px;
@@ -27,6 +34,85 @@ h2 {
 
 .Form .form-label {
   font-weight: bold;
+}*/
+
+.calendar-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-top: 20px;
+}
+
+.react-calendar {
+  width: 100%;
+  border: solid;
+  font-family: 'Arial, sans-serif';
+  line-height: 1.125em;
+  border-radius: 15px;
+}
+
+.react-calendar__tile {
+  max-width: 100%;
+  padding: 10px;
+  background: #f0f0f0;
+  border-radius: 5px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.react-calendar__tile--now {
+  background: #9c27b0;
+  color: white;
+}
+
+.react-calendar__tile--active {
+  background: #3f51b5;
+  color: white;
+}
+
+.form-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-top: 20px;
+}
+
+.form-control {
+  margin-bottom: 20px;
+}
+
+.btn.btn-primary {
+  width: 50%;
+  border: solid;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  border-radius: 15px;
+  background-color: red;
+  border-color: #222;
+}
+
+.btn.btn-primary:hover {
+  background-color: #0fa54d;
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    margin-top: 10px;
+  }
+}
+
+footer {
+  background: #222;
+  color: #6e6868;
+  padding: 10px 0;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  bottom: 0;
 }
 
 .available-slot {
@@ -38,3 +124,10 @@ h2 {
   background-color: #c3e6cb !important;
   color: #155724 !important;
 }
+
+.form-label {
+  text-align: left;
+  display: block;
+  color: whitesmoke;
+}
+
